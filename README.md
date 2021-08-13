@@ -6,6 +6,5 @@ manuscript is currently available as a preprint in [*bioRxiv*](https://www.biorx
 
 Scripts are written by [Maryam Mahmoudi](mailto:maryam.mahmoudi@uni-tuebingen.de) and [Juliana Almario](mailto:juliana.almario@univ-lyon1.fr).
 
-For a description of input files and scripts please find the readme files in each folder.
 
 
