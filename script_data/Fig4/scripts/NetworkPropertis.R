@@ -24,6 +24,7 @@ pltList = list()
 # Figure "e" rewiring score of nodes box plots 
 #
 setwd("data/")
+#file names shows month numbers 11=Nov,12=Dec,1=Jan,2=Feb,3=Mar
 filelist = c("11-12node.csv","12-1node.csv","1-2node.csv","2-3node.csv")
 Monthname1 = c("November_December", "December_January" ,"January_February" , "February_March")
 data <- data.frame()
