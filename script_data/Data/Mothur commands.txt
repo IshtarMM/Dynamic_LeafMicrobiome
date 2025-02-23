@@ -1,0 +1,82 @@
+#Mothur commands (Bacteria, fungi, oomycetes)
+
+#fastq.info(file=File_FastqInfo.txt, oligos=barcodes_practical.txt, bdiffs=2, fasta=F, qfile=F)
+##file content: Undetermined_S0_L001_R1_001.fastq Undetermined_S0_L001_R2_001.fastq none Undetermined_S0_L001_I1_001.fastq
+##create guide file to match grou-F-R (all.files) the use this in the make.contigs
+#make.contigs(file=Undetermined_S0_L001_R1_001.files, processors=16)
+#screen.seqs(fasta=Undetermined_S0_L001_R1_001.trim.contigs.fasta, contigsreport=Undetermined_S0_L001_R1_001.contigs.report, group=Undetermined_S0_L001_R1_001.contigs.groups, minoverlap=5, maxambig=0, maxhomop=10, minlength=100, maxlength=600, processors=16)
+#rename.seqs(fasta=Undetermined_S0_L001_R1_001.trim.contigs.good.fasta, group=Undetermined_S0_L001_R1_001.contigs.good.groups)
+#system(grep -A 1 "BacV5." Undetermined_S0_L001_R1_001.trim.contigs.good.renamed.fasta>BV5.trim.contigs.good.renamed.fasta)
+#system(grep "BacV5." Undetermined_S0_L001_R1_001.contigs.good.renamed.groups>BV5.contigs.good.renamed.groups)
+#unique.seqs(fasta=BV5.trim.contigs.good.renamed.fasta)
+#count.seqs(name=BV5.trim.contigs.good.renamed.names, group=BV5.contigs.good.renamed.groups)
+#chimera.uchime(fasta=BV5.trim.contigs.good.renamed.unique.fasta, count=BV5.trim.contigs.good.renamed.count_table, processors=16)
+#remove.seqs(accnos=BV5.trim.contigs.good.renamed.unique.denovo.uchime.accnos, fasta=BV5.trim.contigs.good.renamed.unique.fasta, count=BV5.trim.contigs.good.renamed.count_table)
+#classify.seqs(fasta=BV5.trim.contigs.good.renamed.unique.pick.fasta, template=gg_13_8_99_phiX.fasta, taxonomy=gg_13_8_99_phiX.gg.tax, processors=16)
+#cluster(fasta=BV5.trim.contigs.good.renamed.unique.pick.fasta, count=BV5.trim.contigs.good.renamed.pick.count_table, method=dgc, cutoff=0.03)
+#split.abund(fasta=BV5.trim.contigs.good.renamed.unique.pick.fasta, count=BV5.trim.contigs.good.renamed.pick.count_table, list=BV5.trim.contigs.good.renamed.unique.pick.dgc.unique_list.list, cutoff=50)
+#classify.otu(taxonomy=BV5.trim.contigs.good.renamed.unique.pick.gg.wang.taxonomy, list=BV5.trim.contigs.good.renamed.unique.pick.dgc.unique_list.0.03.abund.list, count=BV5.trim.contigs.good.renamed.pick.0.03.abund.count_table)
+#make.shared(list=BV5.trim.contigs.good.renamed.unique.pick.dgc.unique_list.0.03.abund.list, count=BV5.trim.contigs.good.renamed.pick.0.03.abund.count_table)
+#get.oturep(fasta=BV5.trim.contigs.good.renamed.unique.pick.0.03.abund.fasta, list=BV5.trim.contigs.good.renamed.unique.pick.dgc.unique_list.0.03.abund.list, count=BV5.trim.contigs.good.renamed.pick.0.03.abund.count_table, method=abundance)
+#Delete non-target reads like unknown, plant (chloroplast and mitochondria) and left over PhiX control
+#remove.lineage(constaxonomy=BV5.trim.contigs.good.renamed.unique.pick.dgc.unique_list.0.03.abund.0.03.cons.taxonomy, shared=BV5.trim.contigs.good.renamed.unique.pick.dgc.unique_list.0.03.abund.shared, taxon=unknown-mitochondria-Chloroplast-PhiX)
+#Ftrad
+#system(grep -A 1 "Ftrad." Undetermined_S0_L001_R1_001.trim.contigs.good.renamed.fasta>Ftrad.trim.contigs.good.renamed.fasta)
+#system(grep "Ftrad." Undetermined_S0_L001_R1_001.contigs.good.renamed.groups>Ftrad.contigs.good.renamed.groups)
+#unique.seqs(fasta=Ftrad.trim.contigs.good.renamed.fasta)
+#count.seqs(name=Ftrad.trim.contigs.good.renamed.names, group=Ftrad.contigs.good.renamed.groups)
+#chimera.vsearch(fasta=Ftrad.trim.contigs.good.renamed.unique.fasta, count=Ftrad.trim.contigs.good.renamed.count_table, processors=16)
+#remove.seqs(accnos=Ftrad.trim.contigs.good.renamed.unique.denovo.vsearch.accnos, fasta=Ftrad.trim.contigs.good.renamed.unique.fasta, count=Ftrad.trim.contigs.good.renamed.count_table)
+###ItsX for extraction of only ITS1 region (outside mothur)
+###copied "Ftrad.trim.contigs.good.renamed.unique.pick.fasta" (fasta after chimera clean up) to the ITSx folder in programs:
+###/biodata/dep_psl/grp_kemen/programs/ITSx_1.1.1/
+###bsub -q multicore20 -n 16 -R 'span[hosts=1] rusage[mem=10000]' "/biodata/dep_psl/grp_kemen/programs/ITSx_1.1.1/ITSx -i Ftrad.trim.contigs.good.renamed.unique.pick.fasta --preserve T --save_regions all -t f,o,t --allow_single_domain 1e-5,0 -N 1 --partial 1 --cpu 16"
+###to update the mothur count file with the lost sequences you have to list the fasta in the ITSX full and partial file (ITSx_out.ITS1.full_and_partial.fasta) then get their counts in the count file
+###copy the file "ITSx_out.ITS1.full_and_partial.fasta" to the mothr folder and rename it for ex "Ftrad.trim.contigs.good.renamed.unique.pick.itsx.fasta"
+#list.seqs(fasta=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.fasta)
+#get.seqs(accnos=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.accnos, count=Ftrad.trim.contigs.good.renamed.pick.count_table)
+#Classify seqs with unite fungi ITS DB
+#classify.seqs(fasta=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.fasta, template=UNITE_public_mothur_full_01.12.2017_phiX.fasta, taxonomy=UNITE_public_mothur_full_01.12.2017_taxonomy_phiX.txt, processors=16)
+#cluster(fasta=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.fasta, count=Ftrad.trim.contigs.good.renamed.pick.pick.count_table, method=dgc, cutoff=0.03)
+#split.abund(fasta=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.fasta, count=Ftrad.trim.contigs.good.renamed.pick.pick.count_table, list=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.list, cutoff=50)
+#classify.otu(taxonomy=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.2017_taxonomy_phiX.wang.taxonomy, list=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.list, count=Ftrad.trim.contigs.good.renamed.pick.pick.0.03.abund.count_table)
+#make.shared(list=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.list, count=Ftrad.trim.contigs.good.renamed.pick.pick.0.03.abund.count_table)
+#remove.lineage(constaxonomy=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.0.03.cons.taxonomy, shared=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.shared, taxon=unknown-Plantae-PhiX)
+#get.oturep(fasta=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.0.03.abund.fasta, list=Ftrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.list, count=Ftrad.trim.contigs.good.renamed.pick.pick.0.03.abund.count_table, method=abundance)
+#Otrad no ITSX, classify with full Unite (all euk)
+#system(grep -A 1 "Otrad." Undetermined_S0_L001_R1_001.trim.contigs.good.renamed.fasta>Otrad.trim.contigs.good.renamed.fasta)
+#system(grep "Otrad." Undetermined_S0_L001_R1_001.contigs.good.renamed.groups>Otrad.contigs.good.renamed.groups)
+#unique.seqs(fasta=Otrad.trim.contigs.good.renamed.fasta)
+#count.seqs(name=Otrad.trim.contigs.good.renamed.names, group=Otrad.contigs.good.renamed.groups)
+#chimera.vsearch(fasta=Otrad.trim.contigs.good.renamed.unique.fasta, count=Otrad.trim.contigs.good.renamed.count_table, processors=16)
+#remove.seqs(accnos=Otrad.trim.contigs.good.renamed.unique.denovo.vsearch.accnos, fasta=Otrad.trim.contigs.good.renamed.unique.fasta, count=Otrad.trim.contigs.good.renamed.count_table)
+classify.seqs(fasta=Otrad.trim.contigs.good.renamed.unique.pick.fasta, template=UNITE_public_mothur_full_all_02.02.2019_phiX.fasta, taxonomy=UNITE_public_mothur_full_all_02.02.2019_taxonomy_phiX.txt, processors=16)
+cluster(fasta=Otrad.trim.contigs.good.renamed.unique.pick.fasta, count=Otrad.trim.contigs.good.renamed.pick.count_table, method=dgc, cutoff=0.03)
+split.abund(fasta=Otrad.trim.contigs.good.renamed.unique.pick.fasta, count=Otrad.trim.contigs.good.renamed.pick.count_table, list=Otrad.trim.contigs.good.renamed.unique.pick.dgc.list, cutoff=50)
+classify.otu(taxonomy=Otrad.trim.contigs.good.renamed.unique.pick.2019_taxonomy_phiX.wang.taxonomy, list=Otrad.trim.contigs.good.renamed.unique.pick.dgc.0.03.abund.list, count=Otrad.trim.contigs.good.renamed.pick.0.03.abund.count_table)
+make.shared(list=Otrad.trim.contigs.good.renamed.unique.pick.dgc.0.03.abund.list, count=Otrad.trim.contigs.good.renamed.pick.0.03.abund.count_table)
+remove.lineage(constaxonomy=Otrad.trim.contigs.good.renamed.unique.pick.dgc.0.03.abund.0.03.cons.taxonomy, shared=Otrad.trim.contigs.good.renamed.unique.pick.dgc.0.03.abund.shared, taxon=unknown-Plantae-PhiX)
+get.oturep(fasta=Otrad.trim.contigs.good.renamed.unique.pick.0.03.abund.fasta, list=Otrad.trim.contigs.good.renamed.unique.pick.dgc.0.03.abund.list, count=Otrad.trim.contigs.good.renamed.pick.0.03.abund.count_table, method=abundance)
+#Otrad
+#system(grep -A 1 "Otrad." Undetermined_S0_L001_R1_001.trim.contigs.good.renamed.fasta>Otrad.trim.contigs.good.renamed.fasta)
+#system(grep "Otrad." Undetermined_S0_L001_R1_001.contigs.good.renamed.groups>Otrad.contigs.good.renamed.groups)
+#unique.seqs(fasta=Otrad.trim.contigs.good.renamed.fasta)
+#count.seqs(name=Otrad.trim.contigs.good.renamed.names, group=Otrad.contigs.good.renamed.groups)
+#chimera.vsearch(fasta=Otrad.trim.contigs.good.renamed.unique.fasta, count=Otrad.trim.contigs.good.renamed.count_table, processors=16)
+#remove.seqs(accnos=Otrad.trim.contigs.good.renamed.unique.denovo.vsearch.accnos, fasta=Otrad.trim.contigs.good.renamed.unique.fasta, count=Otrad.trim.contigs.good.renamed.count_table)
+###ItsX for extraction of only ITS1 region (outside mothur)
+###copied "Otrad.trim.contigs.good.renamed.unique.pick.fasta" (fasta after chimera clean up) to the ITSx folder in programs:
+###cd /biodata/dep_psl/grp_kemen/programs/ITSx_1.1.1/
+###bsub -q multicore20 -n 16 -R 'span[hosts=1] rusage[mem=10000]' "/biodata/dep_psl/grp_kemen/programs/ITSx_1.1.1/ITSx -i Otrad.trim.contigs.good.renamed.unique.pick.fasta --preserve T --save_regions all -t f,o,t -E 1e-3 --allow_single_domain 1e-5,0 -N 1 --partial 1 --cpu 16"
+###to update the mothur count file with the lost sequences you have to list the fasta in the ITSX full and partial file (ITSx_out.ITS1.full_and_partial.fasta) then get their counts in the count file
+###copy the file "ITSx_out.ITS1.full_and_partial.fasta" to the mothr folder and rename it for ex "Otrad.trim.contigs.good.renamed.unique.pick.itsx.fasta"
+#list.seqs(fasta=Otrad.trim.contigs.good.renamed.unique.pick.itsx.fasta)
+#get.seqs(accnos=Otrad.trim.contigs.good.renamed.unique.pick.itsx.accnos, count=Otrad.trim.contigs.good.renamed.pick.count_table)
+#Classify seqs with unite all eukaryotes ITS DB
+#classify.seqs(fasta=Otrad.trim.contigs.good.renamed.unique.pick.itsx.fasta, template=UNITE_public_mothur_full_all_02.02.2019_phiX.fasta, taxonomy=UNITE_public_mothur_full_all_02.02.2019_taxonomy_phiX.txt, processors=16)
+#cluster(fasta=Otrad.trim.contigs.good.renamed.unique.pick.itsx.fasta, count=Otrad.trim.contigs.good.renamed.pick.pick.count_table, method=dgc, cutoff=0.03)
+#split.abund(fasta=Otrad.trim.contigs.good.renamed.unique.pick.itsx.fasta, count=Otrad.trim.contigs.good.renamed.pick.pick.count_table, list=Otrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.list, cutoff=50)
+#classify.otu(taxonomy=Otrad.trim.contigs.good.renamed.unique.pick.itsx.2019_taxonomy_phiX.wang.taxonomy, list=Otrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.list, count=Otrad.trim.contigs.good.renamed.pick.pick.0.03.abund.count_table)
+#make.shared(list=Otrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.list, count=Otrad.trim.contigs.good.renamed.pick.pick.0.03.abund.count_table)
+#remove.lineage(constaxonomy=Otrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.0.03.cons.taxonomy, shared=Otrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.shared, taxon=unknown-Plantae-PhiX)
+#get.oturep(fasta=Otrad.trim.contigs.good.renamed.unique.pick.itsx.0.03.abund.fasta, list=Otrad.trim.contigs.good.renamed.unique.pick.itsx.dgc.0.03.abund.list, count=Otrad.trim.contigs.good.renamed.pick.pick.0.03.abund.count_table, method=abundance)

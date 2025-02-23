@@ -14,7 +14,7 @@ In this project, we collected and analyzed time-series leaf microbial networks. 
 - **Reproducible Scripts**: R scripts for generating figures, analyzing microbial networks, and statistical modeling.  
 - **Detailed Results**: Outputs and visualizations for each figure and supplementary figure.  
 
-- **Raw amplicon dataset**: Sequencing data are available under NCBI BioProject PRJNA438596
+
 
 ---
 
@@ -42,6 +42,10 @@ In this project, we collected and analyzed time-series leaf microbial networks. 
    ```
 
 ---
+
+- **Raw amplicon dataset**: Sequencing data are available under NCBI BioProject PRJNA438596
+Otu tables their taxonomy and sequences were obtained by using Mothur pipline script_data/Data/Mothur_commands.txt
+and stored in script_data/Data/
 
 
 ## Figures Overview
