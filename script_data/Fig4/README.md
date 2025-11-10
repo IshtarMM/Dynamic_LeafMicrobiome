@@ -74,6 +74,9 @@
 5. Store the output in: `Fig4A_Network/edge.csv`.
 6. Open `edge.csv` in **Cytoscape** and visualize as `Co-abundaceNetwork_Fig4a.cys`.
 7. Import `nodeattribute.csv` for enhanced visualization (e.g., highlighting core microbes).
+To create monthly clusters of nodes in Cytoscape, I first selected the network by month (e.g., searching for “nov” to select nodes from November).
+For each month’s subset of nodes, I applied the Compound Spring Embedded layout to arrange them locally.
+I repeated this process for each month, resulting in distinct, visually organized clusters of nodes grouped by month.
 8. Export final figure: `Co-abundaceNetwork_Fig4a.png`.
 
 ---
